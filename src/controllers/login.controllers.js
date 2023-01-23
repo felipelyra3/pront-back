@@ -1,7 +1,8 @@
 import loginRepository from "../Repositories/login.repositories.js";
-import { loginSchema } from "../Schemas/login.schema.js";
+import { loginSchema, tokenSchema } from "../Schemas/login.schema.js";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from 'uuid';
+import httpStatus from "http-status";
 
 async function Login(req, res) {
     const user = await loginRepository.findOneByCPF(req.body.cpf);
@@ -25,13 +26,27 @@ async function Login(req, res) {
                 token: token,
             }
             await loginRepository.insertOneNewSession(editedUser);
-            res.status(200).send(editedUser);
+            res.status(httpStatus.CREATED).send(editedUser);
         } else {
-            res.status(422).send("CPF ou senha inválidos");
+            res.sendStatus(httpStatus.UNAUTHORIZED);
         }
     } catch (error) {
         res.status(422).send(error.details.map((detail) => detail.message));
     }
 }
 
-export { Login };
+async function CheckToken(req, res) {
+    try {
+        await tokenSchema.validateAsync(req.body);
+        const session = await loginRepository.findOneByToken(req.body.token);
+        if (session) {
+            res.status(httpStatus.OK).send(session);
+        } else {
+            res.sendStatus(httpStatus.UNAUTHORIZED);
+        }
+    } catch (error) {
+        res.status(422).send(error.details.map((detail) => detail.message));
+    }
+}
+
+export { Login, CheckToken };

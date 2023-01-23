@@ -8,4 +8,8 @@ const loginSchema = joi.object({
         .required(),
 });
 
-export { loginSchema };
+const tokenSchema = joi.object({
+    token: joi.string().empty().required()
+});
+
+export { loginSchema, tokenSchema };
