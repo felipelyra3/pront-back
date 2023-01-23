@@ -1,0 +1,21 @@
+FROM mongo
+
+ENV MONGO_INITDB_ROOT_USERNAME mongo
+ENV MONGO_INITDB_ROOT_PASSWORD mongo123
+
+VOLUME ["/data/db"]
+
+# Define working directory.
+WORKDIR /data
+
+# Define default command.
+CMD ["mongod"]
+
+# Expose ports.
+#   - 27017: process
+#   - 28017: http
+EXPOSE 27017
+EXPOSE 28017
+
+# docker build -t pront-mongo-image -f api/db/Dockerfile .
+# docker run -d -p 27017:27017 --rm --name pront-mongo-container pront-mongo-image 
