@@ -3,6 +3,7 @@ import cors from "cors";
 import db from "./database/db.js";
 import bcrypt from "bcrypt";
 import login from "./routers/login.routers.js";
+import register from "./routers/register.routers.js";
 
 export function init() {
     const server = express();
@@ -13,6 +14,7 @@ export function init() {
     server.use(express.json());
 
     server.use(login);
+    server.use(register);
 
     server.listen(PORT, HOST, () => {
         console.log(`Running on http://${HOST}:${PORT}`);

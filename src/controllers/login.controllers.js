@@ -5,15 +5,14 @@ import { v4 as uuidv4 } from 'uuid';
 import httpStatus from "http-status";
 
 async function Login(req, res) {
-    const user = await loginRepository.findOneByCPF(req.body.cpf);
+    const user = await loginRepository.findOneByCPF(res.locals.body.cpf);
     if (!user) {
-        res.status(422).send('CPF ou senha inválidos');
+        res.sendStatus(httpStatus.UNPROCESSABLE_ENTITY);
         return;
     }
 
     try {
-        await loginSchema.validateAsync(req.body);
-        const compare = await bcrypt.compareSync(req.body.password, user.password);
+        const compare = await bcrypt.compareSync(res.locals.body.password, user.password);
         if (compare) {
             const token = uuidv4();
             const editedUser = {
@@ -22,7 +21,7 @@ async function Login(req, res) {
                 socialName: user.socialName,
                 cpf: user.cpf,
                 loginType: user.loginType,
-                birthDate: user.birthDate,
+                birthday: user.birthday,
                 token: token,
             }
             await loginRepository.insertOneNewSession(editedUser);
@@ -37,16 +36,26 @@ async function Login(req, res) {
 
 async function CheckToken(req, res) {
     try {
-        await tokenSchema.validateAsync(req.body);
-        const session = await loginRepository.findOneByToken(req.body.token);
+        const session = await loginRepository.findOneByToken(res.locals.token, res.locals.logintype);
         if (session) {
-            res.status(httpStatus.OK).send(session);
+            res.sendStatus(httpStatus.OK);
         } else {
             res.sendStatus(httpStatus.UNAUTHORIZED);
         }
     } catch (error) {
-        res.status(422).send(error.details.map((detail) => detail.message));
+        res.sendStatus(httpStatus.UNAUTHORIZED);
     }
 }
 
-export { Login, CheckToken };
+async function DeleteSession(req, res) {
+    const { authorization } = req.headers
+    const token = authorization?.replace('Bearer ', '')
+    try {
+        await loginRepository.findOneAndDeleteSessionByToken(token);
+        res.sendStatus(httpStatus.ACCEPTED);
+    } catch (error) {
+        res.sendStatus(httpStatus.NOT_FOUND);
+    }
+}
+
+export { Login, CheckToken, DeleteSession };

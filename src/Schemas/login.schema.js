@@ -9,7 +9,8 @@ const loginSchema = joi.object({
 });
 
 const tokenSchema = joi.object({
-    token: joi.string().empty().required()
+    token: joi.string().empty().required(),
+    logintype: joi.string().empty().required(),
 });
 
 export { loginSchema, tokenSchema };
