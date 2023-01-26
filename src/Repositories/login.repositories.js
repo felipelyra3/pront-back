@@ -5,6 +5,16 @@ async function findOneByCPF(cpf) {
     return user;
 }
 
+async function findOneByEmail(email) {
+    const user = await db.collection('users').findOne({ email: email });
+    return user;
+}
+
+async function findOneBySusNumber(susNumber) {
+    const user = await db.collection('users').findOne({ susNumber: susNumber });
+    return user;
+}
+
 async function findOneByToken(token, loginType) {
     const session = await db.collection('sessions').findOne({ token: token, loginType });
     return session;
@@ -32,6 +42,8 @@ async function findOneCheckSessionLoginType(token, loginType) {
 
 const loginRepository = {
     findOneByCPF,
+    findOneByEmail,
+    findOneBySusNumber,
     findOneByToken,
     insertOneNewSession,
     findOneAndDeleteSessionByToken,

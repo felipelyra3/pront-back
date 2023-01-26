@@ -14,7 +14,7 @@ export function init() {
     server.use(express.json());
 
     server.use(login);
-    server.use(register);
+    server.use("/registration", register);
 
     server.listen(PORT, HOST, () => {
         console.log(`Running on http://${HOST}:${PORT}`);

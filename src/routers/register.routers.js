@@ -1,11 +1,11 @@
 import express from 'express';
 import { LoginTypeAuth } from '../middlewares/auth.middleware.js';
 import { RegisterUser } from '../controllers/register.controller.js';
-//import { Login, CheckToken, DeleteSession } from '../controllers/login.controllers.js';
+import { RegisterNewUserSchemaValidation } from '../middlewares/register.validation.js';
 
 const router = express.Router();
 
-router.post('/registeruser', LoginTypeAuth, RegisterUser)
+router.post('/newuser', LoginTypeAuth, RegisterNewUserSchemaValidation, RegisterUser)
     /* .post("/checktoken", CheckToken)
     .delete("/deletesession", DeleteSession) */;
 
