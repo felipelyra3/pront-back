@@ -17,10 +17,21 @@ async function LoginTypeAuth(req, res, next) {
             return;
         }
 
+        res.locals.token = token;
+        res.locals.logintype = loginType;
+
         next();
     } catch (error) {
         res.sendStatus(httpStatus.UNPROCESSABLE_ENTITY);
     }
 }
 
-export { LoginTypeAuth };
+async function LoginTypeBlock(req, res, next) {
+    if (req.headers.logintype !== "admin" && req.headers.logintype !== "doctor" && req.headers.logintype !== "nurse" && req.headers.logintype !== "recepcionist") {
+        res.sendStatus(httpStatus.UNAUTHORIZED);
+    }
+
+    next();
+}
+
+export { LoginTypeAuth, LoginTypeBlock };

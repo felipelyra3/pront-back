@@ -48,8 +48,7 @@ async function CheckToken(req, res) {
 }
 
 async function DeleteSession(req, res) {
-    const { authorization } = req.headers
-    const token = authorization?.replace('Bearer ', '')
+    const { token } = res.locals;
     try {
         await loginRepository.findOneAndDeleteSessionByToken(token);
         res.sendStatus(httpStatus.ACCEPTED);

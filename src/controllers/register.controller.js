@@ -28,27 +28,4 @@ async function RegisterUser(req, res) {
     }
 }
 
-async function RegisterUserr(req, res) {
-    const { name, socialName, gender, birthday, cpf, address, loginType, email, susNumber, phoneNumbers, healthCare, crm, coren, password } = res.locals.body
-    try {
-        const findUserByCPF = await loginRepository.findOneByCPF(cpf);
-        const findUserBySusNumber = "";
-        if (susNumber) {
-            findUserBySusNumber = await loginRepository.findOneBySusNumber(susNumber);
-        }
-        if (findUserByCPF || findUserBySusNumber) {
-            console.log("CONFLICT");
-            res.sendStatus(httpStatus.CONFLICT);
-            return;
-        }
-
-        //const hashPassword = bcrypt.hashSync(password, 10);
-
-        await registerRepository.insertOneNewUser(name, socialName, gender, birthday, cpf, address, loginType, email, susNumber, phoneNumbers, healthCare, crm, coren, password);
-        res.sendStatus(httpStatus.ACCEPTED);
-    } catch (error) {
-        res.sendStatus(httpStatus.NOT_FOUND);
-    }
-}
-
 export { RegisterUser };

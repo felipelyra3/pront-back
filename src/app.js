@@ -2,8 +2,9 @@ import express from "express";
 import cors from "cors";
 import db from "./database/db.js";
 import bcrypt from "bcrypt";
-import login from "./routers/login.routers.js";
-import register from "./routers/register.routers.js";
+import login from "./routes/login.routes.js";
+import register from "./routes/register.routes.js";
+import search from "./routes/search.routes.js";
 
 export function init() {
     const server = express();
@@ -13,8 +14,9 @@ export function init() {
     server.use(cors());
     server.use(express.json());
 
-    server.use(login);
+    server.use("/login", login);
     server.use("/registration", register);
+    server.use("/search", search);
 
     server.listen(PORT, HOST, () => {
         console.log(`Running on http://${HOST}:${PORT}`);
