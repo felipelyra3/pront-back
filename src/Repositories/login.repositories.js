@@ -1,4 +1,11 @@
 import db from "../database/db.js";
+import mongo from "mongodb";
+
+async function findOneByUserID(_id) {
+    const o_id = new mongo.ObjectID(_id);
+    const user = await db.collection('users').findOne({ _id: o_id });
+    return user;
+}
 
 async function findOneByCPF(cpf) {
     const user = await db.collection('users').findOne({ cpf: cpf });
@@ -41,6 +48,7 @@ async function findOneCheckSessionLoginType(token, loginType) {
 }
 
 const loginRepository = {
+    findOneByUserID,
     findOneByCPF,
     findOneByEmail,
     findOneBySusNumber,

@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import login from "./routes/login.routes.js";
 import register from "./routes/register.routes.js";
 import search from "./routes/search.routes.js";
+import update from "./routes/update.routes.js";
 
 export function init() {
     const server = express();
@@ -17,6 +18,7 @@ export function init() {
     server.use("/login", login);
     server.use("/registration", register);
     server.use("/search", search);
+    server.use("/update", update);
 
     server.listen(PORT, HOST, () => {
         console.log(`Running on http://${HOST}:${PORT}`);
