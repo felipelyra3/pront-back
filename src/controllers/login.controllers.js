@@ -1,5 +1,4 @@
 import loginRepository from "../Repositories/login.repositories.js";
-import { loginSchema, tokenSchema } from "../Schemas/login.schema.js";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from 'uuid';
 import httpStatus from "http-status";

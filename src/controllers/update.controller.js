@@ -1,6 +1,9 @@
 import httpStatus from "http-status";
+import fs from "fs";
+import { google } from "googleapis";
 import loginRepository from "../Repositories/login.repositories.js";
 import updateRepository from "../Repositories/update.repositories.js";
+import { env } from "process";
 
 async function UpdateUserByCPF(req, res) {
     const { _id, name, socialName, gender, birthday, cpf, address, loginType, email, susNumber, phoneNumbers, healthCare, crm, coren } = res.locals.body
@@ -13,7 +16,7 @@ async function UpdateUserByCPF(req, res) {
 
         await updateRepository.updateOneNewUser(_id, name, socialName, gender, birthday, cpf, address, loginType, email, susNumber, phoneNumbers, healthCare, crm, coren);
 
-        res.statusStatus(httpStatus.OK);
+        res.sendStatus(httpStatus.OK);
     } catch (error) {
         res.sendStatus(httpStatus.NOT_FOUND);
     }
@@ -45,7 +48,7 @@ async function AddNewVaccine(req, res) {
             await updateRepository.updaneOneNewVaccine(_id, vaccines);
         }
 
-        res.status(httpStatus.OK).send(findUserByID);
+        res.sendStatus(httpStatus.OK);
     } catch (error) {
         res.sendStatus(httpStatus.NOT_FOUND);
     }
@@ -69,7 +72,7 @@ async function AddNewAllergy(req, res) {
             updateRepository.updaneOneNewAllergy(_id, allergies);
         }
 
-        res.status(httpStatus.OK).send(findUserByID);
+        res.sendStatus(httpStatus.OK);
     } catch (error) {
         res.sendStatus(httpStatus.NOT_FOUND);
     }
@@ -78,7 +81,28 @@ async function AddNewAllergy(req, res) {
 async function AddNewExam(req, res) {
     const { _id, examType, place, link, result } = res.locals.body;
     try {
-        res.status(httpStatus.OK).send(result);
+        const findUserByID = await loginRepository.findOneByUserID(_id);
+        if (!findUserByID) {
+            res.sendStatus(httpStatus.NOT_FOUND);
+            return;
+        }
+
+        const newExam = {
+            examType,
+            place,
+            link,
+            result
+        }
+
+        if (findUserByID.exams) {
+            findUserByID.exams.push(newExam);
+            await updateRepository.updaneOneNewExam(_id, findUserByID.exams);
+        } else {
+            const exams = [newExam];
+            await updateRepository.updaneOneNewExam(_id, exams);
+        }
+
+        res.sendStatus(httpStatus.OK);
     } catch (error) {
         res.sendStatus(httpStatus.NOT_FOUND);
     }

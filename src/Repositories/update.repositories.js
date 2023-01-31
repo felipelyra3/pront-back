@@ -16,10 +16,16 @@ async function updaneOneNewAllergy(_id, newAllergy) {
     await db.collection('users').updateOne({ _id: o_id }, { $set: { allergies: newAllergy } });
 }
 
+async function updaneOneNewExam(_id, newExam) {
+    const o_id = new mongo.ObjectID(_id);
+    await db.collection('users').updateOne({ _id: o_id }, { $set: { exams: newExam } });
+}
+
 const updateRepository = {
     updateOneNewUser,
     updaneOneNewVaccine,
     updaneOneNewAllergy,
+    updaneOneNewExam,
 }
 
 export default updateRepository;

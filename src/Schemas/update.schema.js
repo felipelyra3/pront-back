@@ -45,7 +45,7 @@ const allergySchema = joi.object({
 const examSchema = joi.object({
     examType: joi.string().empty().required(),
     place: joi.string().empty().required(),
-    link: joi.link().empty(),
+    link: joi.string().uri().empty(),
     result: joi.string().empty().required(),
     _id: joi.string().empty().required(),
 });

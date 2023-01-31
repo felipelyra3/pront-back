@@ -1,7 +1,5 @@
 import express from "express";
 import cors from "cors";
-import db from "./database/db.js";
-import bcrypt from "bcrypt";
 import login from "./routes/login.routes.js";
 import register from "./routes/register.routes.js";
 import search from "./routes/search.routes.js";
