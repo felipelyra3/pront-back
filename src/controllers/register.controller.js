@@ -20,8 +20,9 @@ async function RegisterUser(req, res) {
         }
 
         const hashPassword = bcrypt.hashSync(password, 10);
+        const firstLogin = true;
 
-        await registerRepository.insertOneNewUser(name, socialName, gender, birthday, cpf, address, loginType, email, susNumber, phoneNumbers, healthCare, crm, coren, hashPassword);
+        await registerRepository.insertOneNewUser(name, socialName, gender, birthday, cpf, address, loginType, email, susNumber, phoneNumbers, healthCare, crm, coren, hashPassword, firstLogin);
         res.sendStatus(httpStatus.ACCEPTED);
     } catch (error) {
         res.sendStatus(httpStatus.NOT_FOUND);

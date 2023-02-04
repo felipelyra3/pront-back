@@ -1,9 +1,7 @@
 import httpStatus from "http-status";
-import fs from "fs";
-import { google } from "googleapis";
 import loginRepository from "../Repositories/login.repositories.js";
 import updateRepository from "../Repositories/update.repositories.js";
-import { env } from "process";
+import bcrypt from "bcrypt";
 
 async function UpdateUserByCPF(req, res) {
     const { _id, name, socialName, gender, birthday, cpf, address, loginType, email, susNumber, phoneNumbers, healthCare, crm, coren } = res.locals.body
@@ -16,6 +14,23 @@ async function UpdateUserByCPF(req, res) {
 
         await updateRepository.updateOneNewUser(_id, name, socialName, gender, birthday, cpf, address, loginType, email, susNumber, phoneNumbers, healthCare, crm, coren);
 
+        res.sendStatus(httpStatus.OK);
+    } catch (error) {
+        res.sendStatus(httpStatus.NOT_FOUND);
+    }
+}
+
+async function UpdateUserPassword(req, res) {
+    const { cpf, password } = res.locals.body;
+    try {
+        const findUserByCPF = await loginRepository.findOneByCPF(cpf);
+        if (!findUserByCPF) {
+            res.sendStatus(httpStatus.NOT_FOUND);
+            return;
+        }
+
+        const hashPassword = bcrypt.hashSync(password, 10);
+        await updateRepository.updateOneUserPassword(findUserByCPF.cpf, hashPassword);
         res.sendStatus(httpStatus.OK);
     } catch (error) {
         res.sendStatus(httpStatus.NOT_FOUND);
@@ -108,4 +123,4 @@ async function AddNewExam(req, res) {
     }
 }
 
-export { UpdateUserByCPF, AddNewVaccine, AddNewAllergy, AddNewExam };
+export { UpdateUserByCPF, UpdateUserPassword, AddNewVaccine, AddNewAllergy, AddNewExam };
