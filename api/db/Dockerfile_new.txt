@@ -1,0 +1,19 @@
+# Use the official MongoDB image as the base image
+FROM mongo
+
+# Set the working directory
+WORKDIR /data
+
+# Copy the database initialization script
+COPY init.js ./
+
+EXPOSE 28017
+
+# Specify the command to run when the container starts
+CMD [ "mongod", "--auth", "--bind_ip_all" ]
+
+# Initialize the database when the container starts
+CMD [ "mongo", "init.js" ]
+
+# docker build -t pront-mongo-image -f api/db/Dockerfile .
+# docker run -d -p 28017:27017 --rm --name pront-mongo-container pront-mongo-image 

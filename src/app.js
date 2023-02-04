@@ -13,7 +13,7 @@ export function init() {
     server.use(cors());
     server.use(express.json());
 
-    server.get('/', (req, res) => { res.sendStatus(200) });
+    server.get('/', (req, res) => { res.status(200).send(process.env.MONGO_URI) });
     server.use("/login", login);
     server.use("/registration", register);
     server.use("/search", search);
